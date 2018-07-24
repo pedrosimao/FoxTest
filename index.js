@@ -49,10 +49,20 @@ const scrape = url => {
                     "arrivalTime": $('.origin-destination-hour').filter('.origin-destination-border').eq(i).text().trim(),
                     "arrivalStation": $('.origin-destination-station').filter('.origin-destination-border').eq(i).text().trim(),
                     "type": $('.segment').filter('[width=70]').eq(i).text().trim(),
-                    "number": $('.segment').not('[width=70]').eq(i * 2).text().trim()
+                    "number": $('.segment').not('[width=70]').eq(i * 2).text().trim(),
+                    "passengers":[]
+
                  }],
-             }
-            );
+             });
+
+            for (let x = 0; x < $('.passengers').eq(i).find('.typology').length; x++){
+                let typeAll = $('.passengers').eq(i).find('.fare-details').eq(x).text();
+                output.result.trips[0].details.roundTrips[i].trains[0].passengers.push({ 
+                    "type": typeAll.match(/\. Billet(.*)/)[0].replace(/ et(.*)/, "").replace(/\. Billet /,""),
+                    "age": $('.passengers').eq(i).find('.typology').eq(x).text().replace(/^(.*passager)/, '').trim()
+                });
+
+            } 
 
             let price = $('.cell').filter('[align="right"]').eq(i).text().trim();
             price !== "" ? output.result.custom.prices.push({"value": accounting.unformat(price, ",") } ) : null;
