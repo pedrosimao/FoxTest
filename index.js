@@ -34,7 +34,7 @@ const scrape = url => {
         const $ = cheerio.load(cleanHtml);
 
         // start scraping 
-        codeLength = $('td[class="pnr-ref"]').find('span').length - 1; // get the last code in the page
+        const codeLength = $('td[class="pnr-ref"]').find('span').length - 1; // get the last code in the page
         output.result.trips[0].code = $('td[class="pnr-ref"]').find('span').eq(codeLength).text().trim();
         output.result.trips[0].name = $('.pnr-info').slice(1).eq(0).text().trim();
         output.result.trips[0].details.price = accounting.unformat( $('.very-important').text().trim(), ",");
@@ -81,7 +81,7 @@ const scrape = url => {
     // save to JSON file
     fs.writeFile("./output/test-result.json", JSON.stringify(output,null,2), 'utf8', (err) => {
         if (err) {
-            return console.log("Error while writing JSON: ", err);
+            console.log("Error while writing JSON: ", err);
         }
         console.log("The JSON file was saved!");
     }); 
